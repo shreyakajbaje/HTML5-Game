@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Game</title>
+</head>
+<body>
+
+	<canvas style="margin-top:30px;display: block ;padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto;" id="mycanvas" width="640" height="480"></canvas>
+	<marquee>Created by Shreya Kajbaje</marquee>
+
+	<script type="text/javascript">
+		
+		p1y = p2y = 40;
+		pt = 10;
+		ph = 100;
+		bx = by = 50;
+		xv = yv = 4;
+		bd = 6;
+		score1 = score2 = 0;
+		ais = 2;
+
+		window.onload = function(){
+			c = document.getElementById('mycanvas');
+			cc = c.getContext('2d');
+			setInterval(update,1000/30) ; 
+			c.addEventListener('mousemove', function(e){
+				p1y = e.clientY-ph/2;
+			});
+		}
+
+		function reset() {
+			// body...
+			bx = c.width/2;
+			by = c.height/2;
+			xv=-xv;
+			yv=3;
+
+		}
+
+		function update() {
+			// body...
+			//to get ball moving
+			bx+=xv;
+			by+=yv;
+
+			//if ball goes up outside side reverse y velocity
+			if (by < 0 && yv < 0) {
+				yv=-yv;
+			}
+			if (by > c.height && yv > 0) {
+				yv=-yv;
+			}
+			//left side
+			if (bx < 0) {
+				if (by > p1y && by < p1y+ph ) {
+					xv=-xv;
+					dy=by-(p1y+ph/2);
+					yv=dy*0.3; 
+				}else{
+					score2++;
+					reset();
+				}
+			}
+			//right side
+			if (bx > c.width) {
+				if (by > p2y && by < p2y+ph ) {
+					xv=-xv;
+					dy=by-(p2y+ph/2);
+					yv=dy*0.3; 
+				}else{
+					score1++;
+					reset();
+				}
+			}
+
+			if(p2y+ph/2 < by){
+				p2y+=ais;
+			}else{
+				p2y-=ais;
+			}
+
+			//canvas
+			cc.fillStyle = 'black';
+			cc.fillRect(0, 0, c.width, c.height);
+
+			//side planals
+			cc.fillStyle = 'white';
+			cc.fillRect(0, p1y, pt, ph);
+			cc.fillRect(c.width-pt, p2y, pt, ph);
+
+			//ball at center
+			cc.fillRect(bx-bd/2, by-bd/2, bd, bd);
+
+			cc.fillText(score1, 100, 100);
+			cc.fillText(score2, c.width-100, 100);
+		}
+	</script>
+</body>
+</html>
